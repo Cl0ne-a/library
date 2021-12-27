@@ -17,11 +17,12 @@ import java.util.Map;
 @Repository
 public class BookDaoImpl implements BookDao {
     private final NamedParameterJdbcOperations jdbc;
-    @Autowired
-    private BookDataExtractor books;
+    private final BookDataExtractor books;
 
-    public BookDaoImpl(NamedParameterJdbcOperations jdbc) {
+    @Autowired
+    public BookDaoImpl(NamedParameterJdbcOperations jdbc, BookDataExtractor books) {
         this.jdbc = jdbc;
+        this.books = books;
     }
 
     @Override
