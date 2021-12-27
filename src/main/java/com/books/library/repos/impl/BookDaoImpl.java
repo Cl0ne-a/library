@@ -4,6 +4,7 @@ import com.books.library.dto.Book;
 import com.books.library.repos.BookDao;
 import com.books.library.repos.maphelper.BookDataExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ public class BookDaoImpl implements BookDao {
     private final BookDataExtractor books;
 
     @Autowired
-    public BookDaoImpl(NamedParameterJdbcOperations jdbc, BookDataExtractor books) {
+    public BookDaoImpl(NamedParameterJdbcOperations jdbc, @Qualifier("bookDataExtractor") BookDataExtractor books) {
         this.jdbc = jdbc;
         this.books = books;
     }
@@ -31,7 +32,7 @@ public class BookDaoImpl implements BookDao {
         int authorId = book.getAuthorId();
         String title = book.getTitle();
         jdbc.update(
-                "insert into BOOK (TITLE, GENRE_ID, AUTHOR_ID) values (:title, :authorId, :genreId)",
+                "insert into BOOK (TITLE, GENRE_ID, AUTHOR_ID) values (:title, :genreId, :authorId)",
                 Map.of("title", title, "genreId", genreId, "authorId", authorId));
     }
 

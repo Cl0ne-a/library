@@ -17,8 +17,8 @@ public class BookDataExtractor implements ResultSetExtractor<Map<String, List<St
         Map<String, List<String>> bookData = new HashMap<>();
         while (rs.next()) {
             String bookTitle = rs.getString("title");
-            String authorName = rs.getString("name");
             String genre = rs.getString("genre");
+            String authorName = rs.getString("name");
             bookData.put(bookTitle, List.of(genre, authorName));
         }
         return bookData;
