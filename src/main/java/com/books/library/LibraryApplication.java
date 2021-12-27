@@ -19,6 +19,11 @@ public class LibraryApplication {
         dao.create(b);
         dao.readAll().forEach((title, dataSet) -> System.out.printf("Title: %s, genre: %s, author: %s\n", title, dataSet.get(0), dataSet.get(1)));
         System.out.println(dao.readById(2));
+        dao.deleteById(2);
+        dao.readAll().forEach((title, dataSet) -> System.out.printf("Title: %s, genre: %s, author: %s\n", title, dataSet.get(0), dataSet.get(1)));
+        dao.updateBook(3, "Get goat");
+        // todo create handler for EmptyResultDataAccessException
+        // System.out.println(dao.readById(2));
 
         Console.main(args);
     }

@@ -14,6 +14,7 @@ public interface BookDao {
     // todo readById
     Book readById(int id);
     // todo update
-    void deleteById(int id);
+    void updateBook(int id, String title);
     // todo delete
+    void deleteById(int id);
 }

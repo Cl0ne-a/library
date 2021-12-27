@@ -3,7 +3,6 @@ package com.books.library.repos.impl;
 import com.books.library.dto.Book;
 import com.books.library.repos.BookDao;
 import com.books.library.repos.maphelper.BookDataExtractor;
-import org.h2.result.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 @Repository
 public class BookDaoImpl implements BookDao {
@@ -48,6 +46,14 @@ public class BookDaoImpl implements BookDao {
         Map<String, Object> map = Collections.singletonMap("id", id);
         String sql = "select id, title, genre_id, author_id from book where id = :id";
         return jdbc.queryForObject(sql,  map, new BookMapper());
+    }
+
+    @Override
+    public void updateBook(int id, String title) {
+        Map<String, Object> map = Map.of("id", id, "title", title);
+        String sql = "update book set title = :title where id = :id";
+
+        jdbc.update(sql, map);
     }
 
     @Override
