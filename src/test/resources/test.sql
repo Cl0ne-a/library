@@ -1,1 +1,0 @@
-insert into BOOK (TITLE, GENRE_ID, AUTHOR_ID) values ('whats up', 1, 2)

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Map;
@@ -34,42 +33,33 @@ class BookDaoImplTest {
         }
     }
 
-    // todo: здесь падает на запуске всех тестов
-    //  с EmptyResultDataAccessException:
-    //  Incorrect result size: expected 1, actual 0,
-    //  и отрабатывает при одиночном запуске
-    @Sql("/test.sql")
     @DisplayName("read by Id")
     @Test
     void readById() {
-        Book newTestBook = Book.builder()
-                .id(5)
-                .title("whats up")
+        Book expected = Book.builder()
+                .id(1)
+                .title("Lets boogy voogy")
                 .genreId(1)
-                .authorId(2).build();
+                .authorId(1).build();
 
-        Book expected = dao.readById(5);
+        Book actual = dao.readById(1);
 
-        assertThat(expected).usingRecursiveComparison().isEqualTo(newTestBook);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @DisplayName("create new book in DB")
     @Test
     void create() {
-        Book newTestBook = Book.builder()
+        Book expected = Book.builder()
                 .id(5)
                 .title("What's up")
                 .genreId(1)
                 .authorId(2).build();
-        // before create method
-        boolean containsNewTestBook = dao.readAll().containsKey("What's up");
-        Assertions.assertFalse(containsNewTestBook);
 
-        dao.create(newTestBook);
+        dao.create(expected);
 
-        // after create method
-        boolean doesContainNewTestBook = dao.readAll().containsKey("What's up");
-        Assertions.assertTrue(doesContainNewTestBook);
+        Book actual = dao.readById(5);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @DisplayName("return existing list from bookDao")
