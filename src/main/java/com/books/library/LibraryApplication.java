@@ -25,6 +25,7 @@ public class LibraryApplication {
         // todo create handler for EmptyResultDataAccessException
         // System.out.println(dao.readById(2));
 
+
         Console.main(args);
     }
 }
