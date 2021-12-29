@@ -1,13 +1,14 @@
-package com.books.library.service;
+package com.books.library.service.impl;
 
 import com.books.library.dto.Genre;
 import com.books.library.repos.GenreDao;
+import com.books.library.service.GenreService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GenreServiceImpl implements GenreService{
+public class GenreServiceImpl implements GenreService {
     private final GenreDao genreDao;
 
     public GenreServiceImpl(GenreDao genreDao) {

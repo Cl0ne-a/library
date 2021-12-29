@@ -1,7 +1,8 @@
-package com.books.library.service;
+package com.books.library.service.impl;
 
 import com.books.library.dto.Book;
 import com.books.library.repos.BookDao;
+import com.books.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
     private final BookDao bookDao;
 
