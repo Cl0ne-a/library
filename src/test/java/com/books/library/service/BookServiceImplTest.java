@@ -34,13 +34,17 @@ class BookServiceImplTest {
 
     @Test
     void createNewBook() {
-        Book expected = Book.builder().build();
+        Book expected = Book.builder().title("any title").genreId(1).authorId(1).build();
         ArgumentCaptor<Book> bookArgumentCaptor = ArgumentCaptor.forClass(Book.class);
+//        todo this sounds strange here
         doNothing().when(bookDao).create(bookArgumentCaptor.capture());
 
         bookDao.create(expected);
 
 //   todo how to test this service method? bookService.createNewBook(expected);
+        var actualCreated = bookService.createNewBook(expected);
+
+        assertTrue(actualCreated);
         assertEquals(bookArgumentCaptor.getValue(),expected);
     }
 
@@ -70,8 +74,9 @@ class BookServiceImplTest {
 
     @Test
     void updateBookName() {
-        bookService.updateBookName(1, "no boogie");
+        var actualUpdated = bookService.updateBookName(1, "no boogie");
 
+        assertTrue(actualUpdated);
         assertEquals("no boogie", bookService.getById(1).getTitle());
     }
 

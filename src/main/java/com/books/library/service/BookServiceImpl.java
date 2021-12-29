@@ -21,15 +21,9 @@ public class BookServiceImpl implements BookService{
     @Override
     public boolean createNewBook(Book book) {
         boolean created = false;
-        int id = book.getId();
-        String title = book.getTitle();
-        int authorId = book.getAuthorId();
-        int genreId = book.getGenreId();
-        Book ifExists = bookDao.readById(id);
-        if (    ifExists!= null
-                && !ifExists.getTitle().equals(title)
-                && ifExists.getAuthorId() != authorId
-                && ifExists.getGenreId() != genreId) {
+
+        boolean bookNotExists = bookDao.exists(book);
+        if (bookNotExists == true) {
             bookDao.create(book);
             created = true;
         }
@@ -57,9 +51,9 @@ public class BookServiceImpl implements BookService{
     public boolean updateBookName(int id, String title) {
         boolean updated = false;
 
-        Book ifExists = bookDao.readById(id);
+        var exists = bookDao.exists(bookDao.readById(id));
 
-        if (ifExists != null) {
+        if (!exists) {
             bookDao.updateBook(id, title);
             updated = true;
         }

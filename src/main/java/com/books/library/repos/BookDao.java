@@ -7,14 +7,15 @@ import java.util.Map;
 
 public interface BookDao {
 
-    // todo create
+    boolean exists(Book book);
+
     void create(Book book);
-    // todo readAll
+
     Map<String, List<String>> readAll();
-    // todo readById
+
     Book readById(int id);
-    // todo update
+
     void updateBook(int id, String title);
-    // todo delete
+
     void deleteById(int id);
 }
