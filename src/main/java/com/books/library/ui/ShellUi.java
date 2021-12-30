@@ -81,6 +81,7 @@ public class ShellUi {
     @ShellMethod(key = "delete", value = "Signature: delete <id>. Allows to delete existing book from database")
     @ShellMethodAvailability("deleteAvailability")
     String deleteBookById(int id) {
+
         var deleted=  bookService.deleteBookById(id);
         if (bookService.deleteBookById(id) == false) {
             return "No such book in DB";
@@ -88,11 +89,5 @@ public class ShellUi {
             Book toDelete = bookService.getById(id);
             return String.format("Book deleted: %s. Info: %s", deleted, toDelete);
         }
-    }
-
-    public Availability deleteAvailability() {
-        return this.allowedToDelete
-                ? Availability.available()
-                : Availability.unavailable("This book is unavailable");
     }
 }
