@@ -73,8 +73,10 @@ public class ShellUi {
 
     @ShellMethod(key = "update", value = "Signature: update <existing id> <new title>. Here you can update book here, if its id is already in database")
     String updateBookName(int id, String title) {
-        var updated = bookService.updateBookName(id, title);
-        return String.format("Book updated for id%d set title %s", id, title);
+
+        return bookService.updateBookName(id, title)
+        ? String.format("Book updated for id%d set title %s", id, title)
+                :"No such book in the library to update";
     };
 
 
@@ -82,12 +84,10 @@ public class ShellUi {
     @ShellMethodAvailability("deleteAvailability")
     String deleteBookById(int id) {
 
-        var deleted=  bookService.deleteBookById(id);
-        if (bookService.deleteBookById(id) == false) {
-            return "No such book in DB";
-        } else {
-            Book toDelete = bookService.getById(id);
-            return String.format("Book deleted: %s. Info: %s", deleted, toDelete);
-        }
+        return bookService.deleteBookById(id)
+                ? String.format("Book deleted: %s. Info: %s",
+                bookService.deleteBookById(id),
+                bookService.getById(id))
+                : "No such book in DB";
     }
 }
