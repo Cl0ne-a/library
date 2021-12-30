@@ -4,8 +4,6 @@ import com.books.library.dto.Book;
 import com.books.library.repos.BookDao;
 import com.books.library.repos.maphelper.BookDataExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -19,21 +17,21 @@ import java.util.Map;
 @Repository
 public class BookDaoImpl implements BookDao {
     private final NamedParameterJdbcOperations jdbc;
-    private final BookDataExtractor books;
+    private final BookDataExtractor bookDataExtractor;
 
     @Autowired
-    public BookDaoImpl(NamedParameterJdbcOperations jdbc, @Qualifier("bookDataExtractor") BookDataExtractor books) {
+    public BookDaoImpl(NamedParameterJdbcOperations jdbc, BookDataExtractor bookDataExtractor) {
         this.jdbc = jdbc;
-        this.books = books;
+        this.bookDataExtractor = bookDataExtractor;
     }
 
     @Override
-    public boolean exists(Book book) {
-        int id = book.getId();
+    public boolean exists(int id) {
         Map<String, Object> map = Collections.singletonMap("id", id);
-        String sql = "select id, title, genre_id, author_id from book where id = :id";
+        String sql = "select id, title, genre_id, author_id from book " +
+                "where id = :id";
 
-        return jdbc.queryForList(sql, map).isEmpty();
+        return !jdbc.queryForList(sql, map).isEmpty();
     }
 
     @Override
@@ -50,7 +48,7 @@ public class BookDaoImpl implements BookDao {
     public Map<String, List<String>> readAll() {
 
         String sql = "select title, g.genre, a.name from PUBLIC.BOOK join GENRE g on BOOK.GENRE_ID = g.ID join AUTHOR A on BOOK.AUTHOR_ID = A.ID;";
-        return jdbc.query(sql, books);
+        return jdbc.query(sql, bookDataExtractor);
     }
 
     @Override
@@ -76,7 +74,6 @@ public class BookDaoImpl implements BookDao {
     }
 
     private static class BookMapper implements RowMapper<Book> {
-
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {

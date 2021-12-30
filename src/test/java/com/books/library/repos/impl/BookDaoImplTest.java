@@ -22,15 +22,28 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @JdbcTest
 @Import(BookDaoImpl.class)
 class BookDaoImplTest {
+    private final BookDaoImpl dao;
+
     @Autowired
-    private BookDaoImpl dao;
+    BookDaoImplTest(BookDaoImpl dao) {
+        this.dao = dao;
+    }
 
     @Configuration
     static class NestedTestConfiguration {
         @Bean
-        BookDataExtractor bookDataExtractor() {
+        BookDataExtractor dataExtractor() {
             return new BookDataExtractor();
         }
+    }
+
+    @DisplayName("checks correctly if book exists")
+    @Test
+    void exists() {
+        var expectedRetrievedFromDataBase = dao.readById(1).getId();
+        boolean actual = dao.exists(expectedRetrievedFromDataBase);
+
+        Assertions.assertTrue(actual);
     }
 
     @DisplayName("read by Id")
@@ -75,6 +88,7 @@ class BookDaoImplTest {
         assertThat(actual).containsExactlyInAnyOrderEntriesOf(expectedMappedData);
     }
 
+    @DisplayName("update book title")
     @Test
     void updateBook() {
         int bookUnderTestId = 1;

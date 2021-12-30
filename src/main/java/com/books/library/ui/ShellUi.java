@@ -7,8 +7,10 @@ import com.books.library.service.AuthorService;
 import com.books.library.service.BookService;
 import com.books.library.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +21,7 @@ public class ShellUi {
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
+    private boolean allowedToDelete = false;
 
     @Autowired
     public ShellUi(BookService bookService,
@@ -29,17 +32,18 @@ public class ShellUi {
         this.genreService = genreService;
     }
 
-    @ShellMethod(key="authors", value = "display list of available authors")
+    @ShellMethod(key="authors", value = "Signature: authors. Allows todisplay list of available authors")
     public List<Author> getAvailableAuthors() {
         return authorService.getAuthorsList();
     }
 
-    @ShellMethod(key="genres", value = "display list of available genres")
+    @ShellMethod(key="genres", value = "Signature: genres. Allows to display list of available genres")
     public List<Genre> getAvailableGenres() {
         return genreService.getGenresList();
     }
 
-    @ShellMethod(key = "create", value = "Create new book." +
+    @ShellMethod(key = "create", value = "Signatur: create <genre id> <author id>. " +
+            "You can create new book." +
             "To perform this operation enter the book title, " +
             "also choose genre and author from existing list and set them")
     public boolean createNewBook(String title, int genreId, int authorId) {
@@ -55,27 +59,40 @@ public class ShellUi {
                                 .authorId(authorId).build());
     }
 
-    @ShellMethod(key = "booklist", value = "get all books in the library")
+    @ShellMethod(key = "booklist", value = "Signatur: booklist. Allows to get all books in the library")
     public Map<String, List<String>> getAllBooks() {
         return bookService.getAll();
     };
 
-    @ShellMethod(key = "byid", value = "getting book by its  id")
+    @ShellMethod(key = "byid", value = "Signature: byid <id>. Provides for getting book by its id")
     String getById(int id) {
         var book = bookService.getById(id);
         var genre = genreService.byId(book.getGenreId()).getGenre();
         return String.format("Book exists. \nTitle %s \ngenre %s", book.getTitle(), genre);
     }
 
-    @ShellMethod(key = "update", value = "you can update book here, if its id is already in database")
+    @ShellMethod(key = "update", value = "Signature: update <existing id> <new title>. Here you can update book here, if its id is already in database")
     String updateBookName(int id, String title) {
         var updated = bookService.updateBookName(id, title);
         return String.format("Book updated for id%d set title %s", id, title);
     };
 
 
-    @ShellMethod(key = "delete", value = "delete book from database")
-    boolean deleteBookById(int id) {
-        return bookService.deleteBookById(id);
-    };
+    @ShellMethod(key = "delete", value = "Signature: delete <id>. Allows to delete existing book from database")
+    @ShellMethodAvailability("deleteAvailability")
+    String deleteBookById(int id) {
+        var deleted=  bookService.deleteBookById(id);
+        if (bookService.deleteBookById(id) == false) {
+            return "No such book in DB";
+        } else {
+            Book toDelete = bookService.getById(id);
+            return String.format("Book deleted: %s. Info: %s", deleted, toDelete);
+        }
+    }
+
+    public Availability deleteAvailability() {
+        return this.allowedToDelete
+                ? Availability.available()
+                : Availability.unavailable("This book is unavailable");
+    }
 }

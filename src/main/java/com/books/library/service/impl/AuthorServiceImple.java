@@ -22,4 +22,9 @@ public class AuthorServiceImple implements AuthorService {
     public List<Author> getAuthorsList() {
         return authorDao.viewAuthors();
     }
+
+    @Override
+    public Author byId(int id) {
+        return authorDao.getById(id);
+    }
 }

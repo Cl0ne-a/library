@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -24,6 +26,13 @@ public class AuthorDaoImpl implements AuthorDao {
     public List<Author> viewAuthors() {
         String sql = "select id, name from author";
         return jdbc.query(sql, new AuthorMapper());
+    }
+
+    @Override
+    public Author getById(int id) {
+        Map<String, Object> map = Collections.singletonMap("id", id);
+        String sql = "select id, name from author where id = :id";
+        return jdbc.queryForObject(sql, map, new AuthorMapper());
     }
 
     private static class AuthorMapper implements RowMapper<Author> {

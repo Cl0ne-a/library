@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface BookDao {
 
-    boolean exists(Book book);
+    boolean exists(int id);
 
     void create(Book book);
 

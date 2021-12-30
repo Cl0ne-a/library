@@ -23,8 +23,8 @@ public class BookServiceImpl implements BookService {
     public boolean createNewBook(Book book) {
         boolean created = false;
 
-        boolean bookNotExists = bookDao.exists(book);
-        if (bookNotExists == true) {
+        boolean bookNotExists = bookDao.exists(book.getId());
+        if (bookNotExists != true) {
             bookDao.create(book);
             created = true;
         }
@@ -52,9 +52,9 @@ public class BookServiceImpl implements BookService {
     public boolean updateBookName(int id, String title) {
         boolean updated = false;
 
-        var exists = bookDao.exists(bookDao.readById(id));
+        var exists = bookDao.exists(id);
 
-        if (!exists) {
+        if (exists == true) {
             bookDao.updateBook(id, title);
             updated = true;
         }
@@ -65,9 +65,9 @@ public class BookServiceImpl implements BookService {
     public boolean deleteBookById(int id) {
         boolean deleted = false;
 
-        Book ifExists = bookDao.readById(id);
+        boolean exists = bookDao.exists(id);
 
-        if (ifExists != null) {
+        if (exists == true) {
             bookDao.deleteById(id);
             deleted = true;
         }
