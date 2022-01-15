@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:books
+
+  sql:
+    init:
+      mode: always
+      data-locations: test-data.sql
+
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false

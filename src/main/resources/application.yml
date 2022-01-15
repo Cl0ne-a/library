@@ -1,7 +1,8 @@
 spring:
   datasource:
     url: jdbc:h2:mem:books
-
+  main:
+    allow-circular-references: true
   h2:
     console:
       path: /h2-console

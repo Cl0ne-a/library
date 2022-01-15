@@ -1,16 +1,14 @@
 package com.books.library;
 
-import org.h2.tools.Console;
+import com.books.library.service.BookService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.sql.SQLException;
 
 @SpringBootApplication
 public class LibraryApplication {
 
-    public static void main(String[] args) throws SQLException {
-        SpringApplication.run(LibraryApplication.class, args);
-        Console.main(args);
+    public static void main(String[] args) {
+        var ctx = SpringApplication.run(LibraryApplication.class, args);
+        var x = ctx.getBean(BookService.class);
     }
 }
